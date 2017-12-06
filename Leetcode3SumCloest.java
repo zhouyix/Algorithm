@@ -1,43 +1,54 @@
-public class Solution {
-  public int threeSumClosest(int[] nums, int target) {
-      Arrays.sort(nums);
-      int first=0;
-      int len=nums.length;
-      int min=Math.abs(nums[0]+nums[1]+nums[len-1]-target);
-      int result=nums[0]+nums[1]+nums[len-1];
-      for(;first<len-1;first++)
-      {
-      	int second=first+1;
-      	int third=len-1;
-      	while(second < third){
-      		int sum=nums[first]+nums[second]+nums[third];
-      		int diff=Math.abs(sum-target);
-      		if(diff<min)
-      		{
-      			result=sum;
-      			min=diff;
-      		}
+/*
+  Use gap (always positive) to record closet degree.
+  use flag to know the positive or negative.
+*/
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+		int gap = Integer.MAX_VALUE;
+		boolean flag = true;
+		for (int i = 0; i+2 < nums.length; i++) {
+			 int low = i+1;
+			 int high = nums.length -1;
+			 while(low  < high)
+			 {
+				 int sum = nums[i]+nums[low]+nums[high];
+				 
+				 if(sum == target)
+				 {
+						return target;
+                     
+				 }
+				 
+				 
+				 if(sum > target)
+				 {
+					 if(gap > Math.abs(sum-target))
+					 {
+						 flag = true;
+						 gap = Math.abs(sum-target);
+					 }
+					 
+					 high--;
+				 }
+				 else  if(sum < target )
+				 {
+					 if(gap > Math.abs(sum-target))
+					 {
+						 flag = false;
+						 gap = Math.abs(sum-target);
+					 }
+					 
+					 low++;
+				 }
+			     }
+            
+            while(i+2 < nums.length && nums[i+1]==nums[i])
+            {
+                i++;
+            }
+		}
 
-      		if(sum-target==0){
-                return  sum;
-      		}
-      		else
-      			if(sum-target < 0){
-      				second++;
-      				while(second < third && nums[second]==nums[second-1])
-      					second++;
-      			}
-      			else
-      			{
-      				third--;
-      				while(second < third && nums[third]==nums[third+1])
-      					third--;
-      			}
-      	}
-
-       while(first+1 < len && nums[first+1]==nums[first])
-       	first++;
-      } 
-      return result;
+		return flag ? target + gap : target-gap;
     }
 }
