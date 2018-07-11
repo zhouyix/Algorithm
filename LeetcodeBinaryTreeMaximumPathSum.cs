@@ -19,6 +19,7 @@ public class Solution {
         if(root == null)
         {
             return 0;
+
         }
         
         helper(root.left,map,max);
@@ -32,6 +33,7 @@ public class Solution {
         
         //just can return either left path or right path
         return Math.Max(leftNodeMax,rightNodeMax)+root.val;
+
         
     }
 }
