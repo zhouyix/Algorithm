@@ -1,0 +1,57 @@
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head == null)
+        return false;
+
+        ListNode first = head;
+        ListNode second = head;
+
+        while(second.next!= null && second.next.next!=null){
+            first = first.next;
+            second = second.next.next;
+
+            if(first==second){
+               return true;
+            }
+        }
+
+
+        return false;
+    }
+    
+     public ListNode detectCycle(ListNode head) {
+        if(head == null)
+        return null;
+        int step = 0;
+        boolean has =false;
+        ListNode first = head;
+        ListNode second = head;
+
+        while(second.next!= null && second.next.next!=null){
+            first = first.next;
+            second = second.next.next;
+            step++;
+            if(first==second){
+              has = true;
+              break;
+            }
+        }
+if(has){
+        first = head;
+        while(step!=0){
+            first = first.next;
+            step--;
+        }
+
+        second = head;
+        while(second!=first){
+            second = second.next;
+            first = first.next;
+        }
+        return second;
+    }
+    else{
+        return null;
+    }
+    }
+}
