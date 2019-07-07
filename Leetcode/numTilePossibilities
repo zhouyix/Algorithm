@@ -1,0 +1,49 @@
+/*
+ * @lc app=leetcode id=1079 lang=java
+ *
+ * [1079] Letter Tile Possibilities
+ */
+class Solution {
+    public int numTilePossibilities1(String tiles) {
+        HashSet<String> list = new HashSet<String>();
+        for (int i = 0; i < tiles.length(); i++) {
+            HashSet<String> res = new HashSet<>(list);
+            for (String str : list) {
+                for (int k = 0; k <= str.length(); k++) {
+                    res.add(new StringBuffer(str).insert(k, tiles.charAt(i)).toString());
+                }
+            }
+
+            res.add(tiles.charAt(i) + "");
+            list = res;
+        }
+
+        return list.size();
+    }
+
+    public int numTilePossibilities(String tiles){
+        List<String> res = new ArrayList();
+        char[] arr = tiles.toCharArray();
+        Arrays.sort(arr);
+        dfs(arr,new StringBuffer(),res,new boolean[tiles.length()]);
+        return res.size();
+    }
+
+    public void dfs(char[] arr,StringBuffer sb,List<String> res,boolean[] visited){
+        if(sb.length() > 0){
+            res.add(sb.toString());
+        }
+
+        for(int i=0;i<arr.length;i++){
+            if(visited[i] || i>0 &&(!visited[i-1] &&arr[i] == arr[i-1])) continue;
+            visited[i] = true;
+            sb.append(arr[i]);
+            dfs(arr,sb,res,visited);
+            sb.deleteCharAt(sb.length()-1);
+            visited[i] = false;
+        }
+    }
+
+
+}
+
