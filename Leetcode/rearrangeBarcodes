@@ -1,0 +1,48 @@
+import java.util.Map;
+import java.util.PriorityQueue;
+
+/*
+ * @lc app=leetcode id=1054 lang=java
+ *
+ * [1054] Distant Barcodes
+ */
+class Solution {
+    public int[] rearrangeBarcodes(int[] barcodes) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < barcodes.length; i++) {
+            int v = map.getOrDefault(barcodes[i], 0);
+            map.put(barcodes[i], v + 1);
+        }
+
+        PriorityQueue<Map.Entry<Integer, Integer>> p = new PriorityQueue<>(new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                return o2.getValue() - o1.getValue();
+            }
+        });
+
+        for (Map.Entry en : map.entrySet()) {
+            p.add(en);
+        }
+
+
+        int[] res = new int [barcodes.length];
+        int i = 0;
+        while(p.size()!=0){
+          Map.Entry<Integer,Integer> en = p.poll();
+          int count  = en.getValue();
+          while(count > 0 ){
+              count --;
+              res[i] = en.getKey();
+              i = i + 2;
+              if(i >= barcodes.length){
+                  i = 1;
+              }
+          }
+        }
+
+    
+       return  res;
+    }
+}
+
