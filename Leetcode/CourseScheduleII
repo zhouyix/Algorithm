@@ -1,0 +1,80 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+
+/*
+ * @lc app=leetcode id=210 lang=java
+ *
+ * [210] Course Schedule II
+ */
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        init(g, prerequisites);
+
+        ArrayList<Integer> list = new ArrayList();
+        int order = 0;
+        for (int i = 0; i < numCourses; i++) {
+            if(!list.contains(i)) 
+              if(!dfs(g, list, i,new HashSet<Integer>())){
+                return new int[0];
+              }
+        }
+
+        if (list.size() != numCourses) {
+            return new int[0];
+        }
+
+        int[] res = new int[numCourses];
+        for (int i : list) {
+            res[order++] = i;
+        }
+        return res;
+    }
+
+    public boolean dfs(HashMap<Integer, List<Integer>> g, ArrayList<Integer> list, int i, HashSet<Integer> inProgress) {
+        if (list.contains(i)) {
+            return true;
+        }
+
+        if (!g.containsKey(i)) {
+            list.add(i);
+            return true;
+        }
+
+        if (g.get(i).size() == 0) {
+            list.add(i);
+            return true;
+        }
+
+        if(inProgress.contains(i)){
+            return false;
+        }
+
+        inProgress.add(i);
+        for (int pre : g.get(i)) {
+            if (!list.contains(pre))
+               if(!dfs(g, list, pre,inProgress))
+               {
+                   return false;
+               }
+        }
+
+        list.add(i);
+        inProgress.remove(i);
+        return true;
+    }
+
+    public void init(HashMap<Integer, List<Integer>> g, int[][] edges) {
+        for (int i = 0; i < edges.length; i++) {
+            if (!g.containsKey(edges[i][1])) {
+                g.put(edges[i][1], new ArrayList<Integer>());
+            }
+
+            if (!g.containsKey(edges[i][0])) {
+                g.put(edges[i][0], new ArrayList<Integer>());
+            }
+
+            g.get(edges[i][0]).add(edges[i][1]);
+        }
+    }
+}
