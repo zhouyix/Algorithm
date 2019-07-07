@@ -1,0 +1,111 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+/*
+ * @lc app=leetcode id=310 lang=java
+ *
+ * [310] Minimum Height Trees
+ */
+
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if (n == 1)
+            return Arrays.asList(0);
+
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        init(g, edges);
+        // return bfs(g);
+        return delLeaves(g, n);
+    }
+
+    public List<Integer> delLeaves(HashMap<Integer, List<Integer>> g, int n) {
+        LinkedList<Integer> leaves = new LinkedList<Integer>();
+        for (int key : g.keySet()) {
+            if (g.get(key).size() == 1) {
+                leaves.add(key);
+            }
+        }
+
+        if(leaves.size() == 0)
+        return leaves;
+
+       
+        while (n > 2) {
+            int size = leaves.size(); 
+             n = n- size; 
+            while (size > 0) {
+               int l = leaves.poll();
+               for(int next : g.get(l)){
+                 g.get(next).remove((Integer)l);
+                 if(g.get(next).size()==1){
+                     leaves.add(next);
+                 }
+               }
+               size--;
+            }
+        }
+
+        return leaves;
+
+    }
+
+    public List<Integer> bfs(HashMap<Integer, List<Integer>> g) {
+        int min = Integer.MAX_VALUE;
+        HashMap<Integer, Integer> res = new HashMap<>();
+        for (Integer key : g.keySet()) {
+            LinkedList<Integer> q = new LinkedList<>();
+            List<Integer> visited = new ArrayList<>();
+            int h = 1;
+            visited.add(key);
+            for (Integer next : g.get(key)) {
+                if (!visited.contains(next))
+                    q.add(next);
+            }
+
+            int size = q.size();
+            while (size > 0) {
+                int v = q.poll();
+                visited.add(v);
+                size--;
+                for (Integer next : g.get(v)) {
+                    if (!visited.contains(next))
+                        q.add(next);
+                }
+
+                if (size == 0) {
+                    h++;
+                    size = q.size();
+                }
+            }
+
+            res.put(key, h);
+            min = Math.min(min, h);
+        }
+
+        List<Integer> list = new ArrayList<>();
+        for (int key : res.keySet()) {
+            if (res.get(key) == min) {
+                list.add(key);
+            }
+        }
+
+        return list;
+    }
+
+    public void init(HashMap<Integer, List<Integer>> g, int[][] edges) {
+        for (int i = 0; i < edges.length; i++) {
+            if (!g.containsKey(edges[i][0])) {
+                g.put(edges[i][0], new ArrayList<Integer>());
+            }
+
+            if (!g.containsKey(edges[i][1])) {
+                g.put(edges[i][1], new ArrayList<Integer>());
+            }
+
+            g.get(edges[i][0]).add(edges[i][1]);
+            g.get(edges[i][1]).add(edges[i][0]);
+        }
+    }
+
+}
