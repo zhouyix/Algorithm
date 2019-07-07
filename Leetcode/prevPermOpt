@@ -1,0 +1,29 @@
+/*
+ * @lc app=leetcode id=1053 lang=java
+ *
+ * [1053] Previous Permutation With One Swap
+ */
+class Solution {
+    public int[] prevPermOpt1(int[] A) {
+        int len = A.length;
+        for(int i=len-1;i>=0;i--){
+            int smaller = i;
+            for(int j = i+1;j<len;j++){
+                if(A[j] < A[i] && (smaller==i || A[j] > A[smaller])){
+                    smaller = j;
+                }
+            }
+  
+            if(smaller!=i){
+                int tmp = A[i];
+                A[i] = A[smaller];
+                A[smaller] = tmp;
+  
+                return A;
+            }
+        }
+  
+        return A;
+    }
+}
+
