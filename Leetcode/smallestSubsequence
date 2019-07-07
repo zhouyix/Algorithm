@@ -1,0 +1,41 @@
+import java.util.HashMap;
+
+/*
+ * @lc app=leetcode id=1081 lang=java
+ *
+ * [1081] Smallest Subsequence of Distinct Characters
+ */
+class Solution {
+    public String smallestSubsequence(String text) {
+        HashMap<Character,Integer> records = new HashMap<>();
+        char[] arr = text.toCharArray();
+        for(char c : arr){
+            records.put(c,records.getOrDefault(c, 0) + 1);
+        }
+
+        boolean[] used = new boolean[26];
+        StringBuffer sb = new StringBuffer(records.size());
+        for(int j=0;j<arr.length;j++){
+           char c = arr[j];
+           if(used[c-'a']){
+               records.put(c,records.get(c)-1);
+               continue;
+           }
+
+           int last= sb.length()-1;
+           while(sb.length() > 0 && c < sb.charAt(last) && records.get(sb.charAt(last)) > 0){
+               used[sb.charAt(last)-'a'] = false;
+               sb.deleteCharAt(last);
+               last--;
+           }
+
+           used[c-'a'] = true;
+           sb.append(c);
+           records.put(c,records.get(c)-1);
+        }
+
+
+        return sb.toString();
+    }
+}
+
