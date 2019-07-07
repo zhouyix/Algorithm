@@ -1,0 +1,39 @@
+
+/*
+ * @lc app=leetcode id=1049 lang=java
+ *
+ * [1049] Last Stone Weight II
+ */
+class Solution {
+    public int lastStoneWeightII(int[] stones){
+        int w  = 0;
+        for(int s : stones){
+            w = w + s;
+        }
+
+        int[][] dp = new int[stones.length+2][w/2+1];
+        int maxPossibleLessThanHalf = knapsack(w/2,stones,stones.length,dp);
+        return w - 2*maxPossibleLessThanHalf;
+    }
+
+    public int knapsack(int w,int[] stones,int i,int[][] dp){
+        if(i==0){
+            return 0;
+        }
+
+        if(dp[i][w]!=0){
+            return dp[i][w];
+        }
+
+        if(stones[i-1] > w){
+            dp[i][w] = knapsack(w, stones, i-1, dp);
+            return dp[i][w];
+        }else{
+            dp[i][w] = Math.max(stones[i-1]+knapsack(w-stones[i-1], stones, i-1, dp), 
+            knapsack(w, stones, i-1, dp));
+            return dp[i][w];
+        }
+
+    }
+}
+
