@@ -1,0 +1,51 @@
+/*
+ * @lc app=leetcode id=880 lang=java
+ *
+ * [880] Decoded String at Index
+ */
+class Solution {
+    public class Node{
+        public String s;
+        public int count;
+        public Node(String s,int count){
+            this.s = s;
+            this.count = count;
+        }
+    }
+    public String decodeAtIndex(String S, int K) {
+        return decode(S,K);
+    }
+
+    public String decode(String s,int k){
+        long len =0;
+        char last = ' ';
+        
+        for( int i=0;i<s.length();i++){
+            if(s.charAt(i) >= 'a' && s.charAt(i)<='z'){
+                len++;
+                if(len == k)
+                    return ""+s.charAt(i);
+                
+                last = s.charAt(i);
+            }else
+            {
+                long newLen = len * (s.charAt(i)-'0');
+                if(newLen == k) return last+"";
+                if(newLen > k){
+                    k = (int)(k % len);
+                    if(k == 0){
+                        return last +"";
+                    }
+
+                    return decode(s,k);
+                }
+
+                len = newLen;
+            }
+        }
+
+        return "";
+    }
+
+}
+
