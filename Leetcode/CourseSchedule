@@ -1,0 +1,65 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+/*
+ * @lc app=leetcode id=207 lang=java
+ *
+ * [207] Course Schedule
+ */
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (numCourses == 0)
+            return true;
+
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        init(g, prerequisites);
+        return delLeaves(g, numCourses);
+    }
+
+      
+
+    public boolean delLeaves(HashMap<Integer, List<Integer>> g, int n) {
+        LinkedList<Integer> leaves = new LinkedList<Integer>();
+        for (int key : g.keySet()) {
+            if (g.get(key).size() == 0) {
+                leaves.add(key);
+            }
+        }
+ 
+       int size = leaves.size();
+       int nodeInPres = g.keySet().size();
+            while (size > 0) {
+                Integer l = leaves.poll(); 
+                size--; 
+                 nodeInPres--;
+                for (int key : g.keySet()) {
+                    if (g.get(key).contains(l)) {
+                        g.get(key).remove(l);
+                        if (g.get(key).size() == 0) {
+                            leaves.add(key);
+                        }
+                    }
+                }
+            
+                if(size == 0) size = leaves.size();
+        }
+
+        return nodeInPres==0;
+
+    }
+
+    public void init(HashMap<Integer, List<Integer>> g, int[][] edges) {
+        for (int i = 0; i < edges.length; i++) {
+            if (!g.containsKey(edges[i][1])) {
+                g.put(edges[i][1], new ArrayList<Integer>());
+            }
+
+            if (!g.containsKey(edges[i][0])) {
+                g.put(edges[i][0], new ArrayList<Integer>());
+            }
+
+            g.get(edges[i][0]).add(edges[i][1]);
+        }
+    }
+}
