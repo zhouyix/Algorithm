@@ -31,3 +31,5 @@ class Solution {
         return res;
     }
 }
+
+//binary-search is better https://leetcode.com/problems/find-right-interval/discuss/337107/C-sort-start-then-binary-search
