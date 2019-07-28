@@ -47,3 +47,5 @@ class Solution {
     }
 }
 
+// we can use BFS and queue way ,reference https://leetcode.com/problems/minimum-genetic-mutation/discuss/342941/C-Solution-BFS
+
