@@ -51,5 +51,28 @@ class Solution {
 
         return  max-1;
     }
+    
+    
+     public int lengthLongestPath1(String input){
+        int res = 0;
+        String[] v = input.split("\n");
+        Stack<Integer> st = new Stack();
+        for(String s:v){
+            int level = s.lastIndexOf("\t")+1;
+        
+            // find parent
+            while(!st.isEmpty() && stack.size() > level){
+                st.pop();
+            }
+
+            // add parent len + present str len without seperator
+            int len = (st.isEmpty() ? 0 : st.peek() + 1) + s.substring(level).length();
+            stack.push(len);
+            if(s.contains("."))
+            res = Math.max(res,len);
+        }
+
+        return res;
+    }
 }
 
