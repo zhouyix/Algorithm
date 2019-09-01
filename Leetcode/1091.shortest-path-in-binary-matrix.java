@@ -5,42 +5,42 @@
  */
 class Solution {
     public int shortestPathBinaryMatrix(int[][] grid) {
+        int dir[][] = new int[][]{{0,1},{0,-1},{1,0},{-1,0},{1,-1},{-1,1},{-1,-1},{1,1}};
         int m = grid.length;
-        if(grid.length==0 || grid[0].length==0){
-            return 0;
-        }
-
         int n = grid[0].length;
-        int[][] dp = new int[grid.length][grid[0].length];
-        dp[0][0]=grid[0][0] == 1 ? Integer.MAX_VALUE:0;
-        for(int i=1;i<m;i++)
-        {
-           dp[i][0] = grid[i][0] == 1 ? Integer.MAX_VALUE : (dp[i-1][0] == Integer.MAX_VALUE ? Integer.MAX_VALUE : dp[i-1][0]+1);
+
+        if(grid[0][0]==1 || grid[m-1][n-1]==1) {
+            return -1;
         }
 
-        for(int i=1;i<n;i++)
-        {
-           dp[0][i] = grid[0][i] == 1 ? Integer.MAX_VALUE : (dp[0][i-1] == Integer.MAX_VALUE ? Integer.MAX_VALUE : dp[0][i-1]+1);
-        }
+        boolean[][] visited = new boolean[m][n];
+        visited[0][0] = true;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{0,0});
 
-        for(int i=1;i<m;i++){
-            for(int j=1;j<n;j++){
-                if(grid[i][j] == 0){
-                    int upper = i-1 >=0 && grid[i-1][j] ==0 ? dp[i-1][j] : Integer.MAX_VALUE;
-                    int left = j-1 >=0 && grid[i][j-1] ==0 ? dp[i][j-1] : Integer.MAX_VALUE;
-                    int cor = i-1>=0 && j-1>=0 && grid[i-1][j-1] == 0 ? dp[i-1][j-1] : Integer.MAX_VALUE;
-                    
-                    int min = Math.min(upper,left);
-                    dp[i][j] = Math.min(min!=Integer.MAX_VALUE ? min +1 : Integer.MAX_VALUE,
-                    cor!=Integer.MAX_VALUE ? cor + 2 : Integer.MAX_VALUE
-                    );
-                }else{
-                    dp[i][j] = Integer.MAX_VALUE;
+        int ans=0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i=0;i<size;i++) {
+                int[] pop = queue.remove();
+                if(pop[0]==m-1 && pop[1]==n-1) {
+                    return ans+1;
+                }
+                for (int k=0;k<8;k++) {
+                    int nextX = dir[k][0]+pop[0];
+                    int nextY = dir[k][1]+pop[1];
+
+                    if(nextX>=0 && nextX<m && nextY>=0 && nextY<n && !visited[nextX][nextY] && grid[nextX][nextY]==0) {
+                        queue.add(new int[]{nextX,nextY});
+                        visited[nextX][nextY]=true;
+                    }
+
                 }
             }
+            ans++;
         }
 
-        return dp[m-1][n-1] == Integer.MAX_VALUE ? -1 : dp[m-1][n-1];
+        return -1;
     }
 }
 
